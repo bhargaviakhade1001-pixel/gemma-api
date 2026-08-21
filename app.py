@@ -1,35 +1,52 @@
-from flask import Flask, request, jsonify,send_file
+from flask import Flask, request, jsonify, send_file
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
+import os
 
 app = Flask(__name__)
 
 MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
 
-print("Loading Gemma model...")
+print("Loading Qwen model...")
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForCausalLM.from_pretrained(
+# Get Hugging Face token from Railway environment variable
+HF_TOKEN = os.getenv("HF_TOKEN")
+
+tokenizer = AutoTokenizer.from_pretrained(
     MODEL_NAME,
+    token=HF_TOKEN,
     torch_dtype=torch.float32
 )
 
-print("Gemma model loaded!")
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL_NAME,
+    token=HF_TOKEN,
+    dtype=torch.float32
+)
+
+print("Qwen model loaded!")
+
 
 @app.route("/")
 def home():
     return send_file("index.html")
+
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
     data = request.get_json()
 
     if not data or "prompt" not in data:
-        return jsonify({"error": "Please provide a prompt"}), 400
+        return jsonify({
+            "error": "Please provide a prompt"
+        }), 400
 
     prompt = data["prompt"]
 
-    inputs = tokenizer(prompt, return_tensors="pt")
+    inputs = tokenizer(
+        prompt,
+        return_tensors="pt"
+    )
 
     with torch.no_grad():
         outputs = model.generate(
@@ -50,8 +67,6 @@ def chat():
 
 
 if __name__ == "__main__":
-    import os
-
     port = int(os.environ.get("PORT", 5001))
 
     app.run(
