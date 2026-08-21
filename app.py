@@ -15,8 +15,7 @@ print("Loading Qwen model...")
 
 tokenizer = AutoTokenizer.from_pretrained(
     MODEL_NAME,
-    token=HF_TOKEN,
-    dtype=torch.float32
+    token=HF_TOKEN
 )
 
 model = AutoModelForCausalLM.from_pretrained(
