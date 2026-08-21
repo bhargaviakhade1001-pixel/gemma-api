@@ -15,7 +15,7 @@ HF_TOKEN = os.getenv("HF_TOKEN")
 tokenizer = AutoTokenizer.from_pretrained(
     MODEL_NAME,
     token=HF_TOKEN,
-    torch_dtype=torch.float32
+    dtype=torch.float32
 )
 
 model = AutoModelForCausalLM.from_pretrained(
