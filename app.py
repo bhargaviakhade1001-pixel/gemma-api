@@ -7,10 +7,11 @@ app = Flask(__name__)
 
 MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
 
-print("Loading Qwen model...")
-
-# Get Hugging Face token from Railway environment variable
 HF_TOKEN = os.getenv("HF_TOKEN")
+
+
+print("HF_TOKEN loaded:", bool(HF_TOKEN))
+print("Loading Qwen model...")
 
 tokenizer = AutoTokenizer.from_pretrained(
     MODEL_NAME,
