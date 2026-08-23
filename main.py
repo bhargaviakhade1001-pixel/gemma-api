@@ -68,7 +68,7 @@ class RESTAPIHandler(BaseHTTPRequestHandler):
                 return
 
             result = client.models.generate_content(
-                model="gemini-4-31B-it",
+                model="gemini-3.6-flash",
                 contents=prompt
             )
 
