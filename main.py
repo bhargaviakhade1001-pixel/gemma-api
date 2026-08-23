@@ -15,15 +15,17 @@ client = genai.Client(api_key=API_KEY)
 class RESTAPIHandler(BaseHTTPRequestHandler):
 
     def send_json(self, status, data):
-        response = json.dumps(data).encode("utf-8")
+    response = json.dumps(data).encode("utf-8")
 
-        self.send_response(status)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(response)))
-        self.end_headers()
+    self.send_response(status)
+    self.send_header("Content-Type", "application/json")
+    self.send_header("Access-Control-Allow-Origin", "*")
+    self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    self.send_header("Access-Control-Allow-Headers", "Content-Type")
+    self.send_header("Content-Length", str(len(response)))
+    self.end_headers()
 
-        self.wfile.write(response)
-
+    self.wfile.write(response)
     def do_GET(self):
         if self.path == "/":
             self.send_json(
